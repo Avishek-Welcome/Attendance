@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Attendance</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+    .container { text-align: center; }
+    input { padding: 10px; font-size: 16px; margin: 10px; width: 200px; }
+    button { padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    #message { margin-top: 20px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Student Attendance System</h1>
+    <input type="text" id="studentId" placeholder="Enter Student ID">
+    <button onclick="recordAttendance()">Submit</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    function recordAttendance() {
+      const studentId = document.getElementById('studentId').value;
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyeFGo53MeZm-YJwVpqaR4ZX0MKZM3XH0ztdg-Gb-RknH2h5IOX54coD6dszwIVKHXzYQ/exec';
+
+      fetch(scriptUrl, {
+        method: 'POST',
+        contentType: 'application/json',
+        body: JSON.stringify({ studentId: studentId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const messageDiv = document.getElementById('message');
+        if (data.status === 'success') {
+          messageDiv.style.color = 'green';
+          messageDiv.innerHTML = Attendance recorded for ${data.studentName};
+        } else {
+          messageDiv.style.color = 'red';
+          messageDiv.innerHTML = data.message;
+        }
+        document.getElementById('studentId').value = '';
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
